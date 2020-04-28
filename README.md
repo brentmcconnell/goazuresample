@@ -1,4 +1,5 @@
-# Azure SDK for Go quickstart: Creating a storage account
+# Azure SDK with GO
+## Create RG, Storage Acct and Write Blob to Container
 
 This code compiles out of the box but requires you to have a valid subscription
 to Azure and an Azure AD app registration with proper permissions.  See the
