@@ -93,6 +93,7 @@ APP_REG=$(az ad app create \
   --reply-urls $REDIRECT_URL \
   --required-resource-accesses $SM_JSON \
   --available-to-other-tenants false \
+  --native-app true \
   -o json
 )
 
