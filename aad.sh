@@ -18,6 +18,7 @@ if [ $? -ne 0 ]; then
 fi
 
 RND=$(echo $RANDOM | grep -o ...$)
+APPREG_DISPLAY_NAME=${APPREG_DISPLAY_NAME-app-aad-$RND}
 GRAPH_ID=00000003-0000-0000-c000-000000000000
 STORAGE_ID=e406a681-f3d4-42a8-90b6-c2b029497af1
 COMPUTE_ID=797f4846-ba00-4fd7-ba43-dac1f8f63013
@@ -27,7 +28,6 @@ USER_READ_ID=$(az ad sp show --id $GRAPH_ID --query "oauth2Permissions[?value=='
 SUSERIM_ID=$(az ad sp show --id $STORAGE_ID --query "oauth2Permissions[?value=='user_impersonation'].id | [0]" -otsv)
 CUSERIM_ID=$(az ad sp show --id $COMPUTE_ID --query "oauth2Permissions[?value=='user_impersonation'].id | [0]" -otsv)
 REDIRECT_URL="https://login.microsoftonline.com/common/oauth2/nativeclient"
-DISPLAY_NAME=app-aad-$RND
 
 echo "Microsoft Graph ID:           $GRAPH_ID"
 echo "Openid:                       $OPEN_ID"
@@ -36,7 +36,7 @@ echo "User.Read:                    $USER_READ_ID"
 echo "Azure Storage ID:             $STORAGE_ID"
 echo "storage user_impersonation:   $SUSERIM_ID"
 echo "compute user impersonation:   $CUSERIM_ID"
-echo -e "\nDISPLAY_NAME:                $DISPLAY_NAME\n" 
+echo -e "\nAPPREG_DISPLAY_NAME:          $APPREG_DISPLAY_NAME\n" 
 
 JSON=$(cat <<-EOF
 [{
@@ -78,7 +78,7 @@ EOF
 )
 
 SM_JSON=$(echo $JSON | jq -c)
-echo -e "$SM_JSON\n"
+echo -e "Resource Access: $SM_JSON\n"
 
 # Verify if we want to proceed
 read -p "Are you sure you want continue creating application registration [y/N]?"
@@ -88,7 +88,7 @@ fi
 
 
 APP_REG=$(az ad app create \
-  --display-name ${DISPLAY_NAME} \
+  --display-name ${APPREG_DISPLAY_NAME} \
   --password ThisSecretPassw0rd! \
   --reply-urls $REDIRECT_URL \
   --required-resource-accesses $SM_JSON \
@@ -118,7 +118,7 @@ az role assignment create \
   --subscription ${SUB_ID} \
   -o json | jq
 
-echo "APPID:            $APP_ID"
-echo "TENANTID:         $TENANT_ID"
-echo "SUBSCRIPTIONID:   $SUB_ID"
-echo "DISPLAY NAME:     $DISPLAY_NAME"
+echo "APPID:                $APP_ID"
+echo "TENANTID:             $TENANT_ID"
+echo "SUBSCRIPTIONID:       $SUB_ID"
+echo "APPREG_DISPLAY NAME:  $APPREG_DISPLAY_NAME"
