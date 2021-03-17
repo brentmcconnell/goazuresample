@@ -11,23 +11,21 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- script: |
+    GIT_COMMIT=$( git rev-parse --short HEAD )
+    echo "##vso[task.setvariable variable=commitHash;isOutput=true]$GIT_COMMIT"
+  name: runtime_vars
+  displayName: 'Set runtime variables for pipeline'
 
 - script: |
-    set -x
-    echo "Setup Summary.md"
-    cat <<-EOF > $(Agent.BuildDirectory)/summary.md
+    echo "Setup github.md"
+    cat <<-EOF > $(Agent.BuildDirectory)/github.md
       Summary
       ======
-      - Created resources: 0
-      - Deleted resources: 0
-      - Updated resources: 0
-      - Unchanged resources: 117
-      - Skipped resources: 1
+      - GIT_VERSION: $(runtime_vars.GIT_COMMIT)
     EOF
-    cat $(Agent.BuildDirectory)/summary.md
-    ls -la $(Agent.BuildDirectory)
+    cat $(Agent.BuildDirectory)/github.md
 
 - script: |
-    ls -la $(Agent.BuildDirectory)
-    echo "##vso[task.uploadsummary]$(Agent.BuildDirectory)/summary.md"
+    echo "##vso[task.uploadsummary]$(Agent.BuildDirectory)/github.md"
   displayName: 'Change summary page'
