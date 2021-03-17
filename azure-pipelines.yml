@@ -17,3 +17,21 @@ steps:
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
+
+- script: |
+    set -x
+    echo "Setup Summary.md"
+    cat <<-EOF > summary.md
+      Summary
+      ======
+      - Created resources: 0
+      - Deleted resources: 0
+      - Updated resources: 0
+      - Unchanged resources: 117
+      - Skipped resources: 1
+    EOF
+    cat summary.md
+
+- script: |
+    ##vso[task.uploadsummary]summary.md
+  displayName: 'Write summary'
