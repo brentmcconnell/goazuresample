@@ -1,4 +1,11 @@
 # Starter pipeline
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      
+      Write-Host "Hello World"
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
@@ -32,6 +39,9 @@ steps:
     EOF
     cat summary.md
 
-- script: |
-    ##vso[task.uploadsummary]summary.md
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      ##vso[task.uploadsummary]summary.md
   displayName: 'Write summary'
