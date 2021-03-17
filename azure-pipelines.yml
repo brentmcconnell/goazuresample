@@ -15,7 +15,7 @@ steps:
 - script: |
     set -x
     echo "Setup Summary.md"
-    cat <<-EOF > /tmp/summary.md
+    cat <<-EOF > $(Agent.BuildDirectory)/summary.md
       Summary
       ======
       - Created resources: 0
@@ -24,10 +24,10 @@ steps:
       - Unchanged resources: 117
       - Skipped resources: 1
     EOF
-    cat /tmp/summary.md
-    ls -la /tmp
+    cat $(Agent.BuildDirectory)/summary.md
+    ls -la $(Agent.BuildDirectory)
 
 - script: |
-    ls -la /tmp
-    echo "##vso[task.uploadsummary]/tmp/summary.md"
+    ls -la $(Agent.BuildDirectory)
+    echo "##vso[task.uploadsummary]$(Agent.BuildDirectory)/summary.md"
   displayName: 'Change summary page'
